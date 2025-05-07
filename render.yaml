@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: projecao-ecom-app
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: python aplicativo.py
+    envVars:
+      - key: PORT
+        value: 5000
