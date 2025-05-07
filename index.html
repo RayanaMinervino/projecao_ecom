@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Projeção de Vendas</title>
+</head>
+<body>
+    <h2>Projeção de Vendas</h2>
+
+    <h3>Filtros</h3>
+    <form method="get" action="/">
+        <label>Filtrar por data específica:</label>
+        <input type="date" name="filtro_data">
+        <br><br>
+        <label>Filtrar por mês:</label>
+        <input type="month" name="filtro_mes">
+        <br><br>
+        <button type="submit">Filtrar</button>
+        <button type="submit" name="limpar" value="1">Limpar</button>
+    </form>
+
+    <h3>Adicionar Nova Projeção</h3>
+    <input type="date" id="data_nova">
+    <input type="text" id="valor_novo" placeholder="Digite o valor">
+    <button onclick="adicionar()">Adicionar</button>
+
+    <h3>Editar Valor Existente</h3>
+    <input type="date" id="data_editar">
+    <input type="text" id="valor_editar" placeholder="Novo valor">
+    <button onclick="editar()">Editar</button>
+
+    <h3>Projeções Atuais</h3>
+    <table border="1">
+        <tr>
+            <th>Data</th>
+            <th>Valor</th>
+            <th>Ações</th>
+        </tr>
+        {% for item in dados %}
+        <tr>
+            <td>{{ item.Data }}</td>
+            <td>{{ item.Valor }}</td>
+            <td><button onclick="excluir('{{ item.Data }}')">Excluir</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<script>
+    async function adicionar() {
+        const data = document.getElementById("data_nova").value;
+        const valor = document.getElementById("valor_novo").value;
+        await fetch("/adicionar", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data, valor})
+        });
+        location.reload();
+    }
+
+    async function editar() {
+        const data = document.getElementById("data_editar").value;
+        const valor = document.getElementById("valor_editar").value;
+        await fetch("/editar", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data, valor})
+        });
+        location.reload();
+    }
+
+    async function excluir(data) {
+        await fetch("/excluir", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data})
+        });
+        location.reload();
+    }
+</script>
+</body>
+</html>
